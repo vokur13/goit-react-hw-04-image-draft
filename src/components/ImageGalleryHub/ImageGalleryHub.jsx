@@ -8,7 +8,32 @@ import { ImageGalleryError } from 'components/ImageGalleryError';
 import { ImageGallery } from 'components/ImageGallery';
 import { ImageGalleryPending } from 'components/ImageGalleryPending';
 
-const Status = {
+// useEffect(()=>{//http:..},[query,page]) 
+{/* <button onClick={() =>setPage(page=>page+1)}>Load More</button> */}
+
+// Modal:
+// App.js
+
+// function methodName(arguments) {
+//         const [selectedImage, setSelectedImage] = useState(null)
+
+//         const selectImage = (imageURL) => {
+//                 setSelectedImage(imageURL)
+//         }
+        
+//         return (
+//                 <div>
+
+//                         <ul>
+//                                 {[1,2,3,4].map((x)=>{<li onClick={()=>selectImage(x)}>img</li>})}
+//                         </ul>
+//                         {selectedImage&&<Modal>Modal<Modal/>}
+//                 </div>
+//         )
+// }
+  
+
+const Status = { 
   IDLE: 'idle',
   PENDING: 'pending',
   RESOLVED: 'resolved',
