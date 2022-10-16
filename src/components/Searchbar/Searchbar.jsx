@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 // import { toast } from 'react-toastify';
 // import { ReactComponent as MyIcon } from './.svg';
@@ -12,13 +13,21 @@ export function Searchbar({ onFormSubmit }) {
     register,
     handleSubmit,
     watch,
-    formState: { errors },
+    reset,
+    formState: { errors, isSubmitSuccessful },
   } = useForm();
+
   const onSubmit = data => {
     onFormSubmit(data);
   };
 
   console.log(watch('query'));
+
+  useEffect(() => {
+    if (isSubmitSuccessful) {
+      reset({ query: '' });
+    }
+  }, [isSubmitSuccessful, reset]);
 
   return (
     <Box
@@ -41,7 +50,13 @@ export function Searchbar({ onFormSubmit }) {
         <SearchFormButton type="submit">
           <ImSearch style={{ marginRight: 0 }} />
         </SearchFormButton>
-        <Input defaultValue="" {...register('query')} />
+        <Input
+          placeholder="Search images and photos"
+          autoComplete="off"
+          autoFocus
+          defaultValue=""
+          {...register('query')}
+        />
         {errors.queryRequired && <span>This field is required</span>}
       </SearchForm>
     </Box>
