@@ -4,9 +4,14 @@ import { useForm } from 'react-hook-form';
 // import { toast } from 'react-toastify';
 // import { ReactComponent as MyIcon } from './.svg';
 import { Box } from 'components/Box';
-import { SearchForm, Input, SearchFormButton, Error } from './Searchbar.styled';
+import { SearchForm, Input, SearchFormButton } from './Searchbar.styled';
 import * as yup from 'yup';
+import { yupResolver } from '@hookform/resolvers/yup';
 import { ImSearch } from 'react-icons/im';
+
+const schema = yup.object().shape({
+  query: yup.string(),
+});
 
 export function Searchbar({ onFormSubmit }) {
   const {
@@ -15,7 +20,7 @@ export function Searchbar({ onFormSubmit }) {
     watch,
     reset,
     formState: { errors, isSubmitSuccessful },
-  } = useForm();
+  } = useForm({ resolver: yupResolver(schema) });
 
   const onSubmit = data => {
     onFormSubmit(data);
@@ -57,11 +62,15 @@ export function Searchbar({ onFormSubmit }) {
           defaultValue=""
           {...register('query')}
         />
-        {errors.queryRequired && <span>This field is required</span>}
+        <p>{errors.query?.message}</p>
       </SearchForm>
     </Box>
   );
 }
+
+Searchbar.propTypes = {
+  onSubmit: PropTypes.func,
+};
 
 // let schema = yup.object().shape({
 //   query: yup.string(),
@@ -117,7 +126,3 @@ export function Searchbar({ onFormSubmit }) {
 //     </Box>
 //   );
 // };
-
-Searchbar.propTypes = {
-  onSubmit: PropTypes.func,
-};

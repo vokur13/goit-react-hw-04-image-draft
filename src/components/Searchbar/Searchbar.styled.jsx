@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { ErrorMessage } from 'formik';
 
 export const SearchForm = styled.form`
   display: flex;
@@ -24,11 +23,6 @@ export const Input = styled.input`
     font: inherit;
     font-size: ${props => `${props.theme.fontSizes.s}px`};
   }
-`;
-
-export const Error = styled(ErrorMessage)`
-  color: ${props => props.theme.colors.red};
-  margin-bottom: ${props => `${props.theme.space[2]}px`};
 `;
 
 export const SearchFormButton = styled.button`

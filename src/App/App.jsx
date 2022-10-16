@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import 'css/styles.css';
@@ -15,7 +15,6 @@ export function App() {
   const [totalHits, setTotalHits] = useState(null);
 
   function handleFormSubmit({ query }) {
-    console.log('searchQuery', query);
     if (!query) return toast.warn('Please let us know your query item');
 
     setPage(initialValue);
@@ -29,6 +28,7 @@ export function App() {
     <>
       <Searchbar onFormSubmit={handleFormSubmit} />
       <ImageGalleryHub
+        // data={(page, query, gallery, total, totalHits)}
         page={page}
         query={query}
         gallery={gallery}
