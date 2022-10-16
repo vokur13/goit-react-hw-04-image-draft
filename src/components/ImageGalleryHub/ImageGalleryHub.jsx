@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useReducer } from 'react';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
 import * as API from 'services/api';
@@ -43,6 +43,32 @@ const Status = {
 
 export function ImageGalleryHub({ page, query, gallery, total, totalHits }) {
   const step = 1;
+  const initialValue = {
+    count: 0,
+    //     _page: page,
+    //     _gallery: gallery,
+    //     _query: query,
+    //     _total: total,
+    //     _totalHits: totalHits,
+    //     error: false,
+    //     status: Status.IDLE,
+  };
+
+  //   function setReducer(state, action) {
+  //     switch (action.type) {
+  //       case 'increment':
+  //         return { ...state, count: state.count + action.payload };
+  //       default:
+  //         throw new Error(`Unsupported action action type ${action.type}`);
+  //     }
+  //   }
+
+  //   const [state, dispatch] = useReducer(setReducer, initialValue);
+
+  //   function handleMoreImage() {
+  //     dispatch({ type: 'increment', payload: step });
+  //   }
+  // page = state.count;
 
   const [_page, setPage] = useState(page);
   const [_gallery, setGallery] = useState(gallery);
@@ -62,8 +88,8 @@ export function ImageGalleryHub({ page, query, gallery, total, totalHits }) {
       setStatus(Status.PENDING);
       try {
         const { totalHits, hits } = await API.getGallery(_query, _page);
-        if ((await hits.length) === 0) {
-          return await toast.error(
+        if (hits.length === 0) {
+          return toast.error(
             `Sorry, there are no images matching your search query for '${_query}'. Please try again.`
           );
         }
@@ -71,7 +97,7 @@ export function ImageGalleryHub({ page, query, gallery, total, totalHits }) {
         setTotal(hits.length);
         setTotalHits(totalHits);
         setStatus(Status.RESOLVED);
-        return await toast.success(`Hooray! We found ${_totalHits} images.`);
+        return toast.success(`Hooray! We found ${_totalHits} images.`);
       } catch (error) {
         console.log(error);
         setError(true);
@@ -79,19 +105,7 @@ export function ImageGalleryHub({ page, query, gallery, total, totalHits }) {
       }
     };
     fetchAssets();
-    return () => {};
-  }, [
-    _gallery,
-    _page,
-    _query,
-    _total,
-    _totalHits,
-    gallery,
-    page,
-    query,
-    total,
-    totalHits,
-  ]);
+  }, [_page, _query, _totalHits, page, query]);
 
   if (status === Status.IDLE) {
     return <div>Please let us know your query item</div>;
