@@ -1,7 +1,7 @@
 import styled from 'styled-components';
-import { Form, Field, ErrorMessage } from 'formik';
+import { ErrorMessage } from 'formik';
 
-export const SearchForm = styled(Form)`
+export const SearchForm = styled.form`
   display: flex;
   align-items: center;
   width: 100%;
@@ -11,7 +11,7 @@ export const SearchForm = styled(Form)`
   overflow: hidden;
 `;
 
-export const Input = styled(Field)`
+export const Input = styled.input`
   display: inline-block;
   width: 100%;
   font: inherit;
