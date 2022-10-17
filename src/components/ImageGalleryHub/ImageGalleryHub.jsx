@@ -1,4 +1,4 @@
-import { useState, useEffect, useReducer } from 'react';
+import { useState, useEffect, useReducer, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
 import * as API from 'services/api';
@@ -44,7 +44,7 @@ const Status = {
 export function ImageGalleryHub({ page, query, gallery, total, totalHits }) {
   const step = 1;
   const initialValue = {
-    count: 0,
+    count: page,
     //     _page: page,
     //     _gallery: gallery,
     //     _query: query,
@@ -54,23 +54,25 @@ export function ImageGalleryHub({ page, query, gallery, total, totalHits }) {
     //     status: Status.IDLE,
   };
 
-  //   function setReducer(state, action) {
-  //     switch (action.type) {
-  //       case 'increment':
-  //         return { ...state, count: state.count + action.payload };
-  //       default:
-  //         throw new Error(`Unsupported action action type ${action.type}`);
-  //     }
-  //   }
+  function setReducer(state, action) {
+    switch (action.type) {
+      case 'increment':
+        return { ...state, count: state.count + action.payload };
+      default:
+        throw new Error(`Unsupported action action type ${action.type}`);
+    }
+  }
 
-  //   const [state, dispatch] = useReducer(setReducer, initialValue);
+  const [state, dispatch] = useReducer(setReducer, initialValue);
 
-  //   function handleMoreImage() {
-  //     dispatch({ type: 'increment', payload: step });
-  //   }
-  // page = state.count;
+  function handleMoreImage() {
+    dispatch({ type: 'increment', payload: step });
+    console.log(state.count);
+    console.log('addMoreImage pressed', Date.now());
+    //     setPage(prevState => prevState + step);
+  }
 
-  const [_page, setPage] = useState(page);
+  //   const [_page, setPage] = useState(page);
   const [_gallery, setGallery] = useState(gallery);
   const [_query, setQuery] = useState(query);
   const [_total, setTotal] = useState(total);
@@ -78,22 +80,22 @@ export function ImageGalleryHub({ page, query, gallery, total, totalHits }) {
   const [error, setError] = useState(false);
   const [status, setStatus] = useState(Status.IDLE);
 
-  useEffect(() => {
+  useMemo(() => {
     if (!query) {
       return;
     }
     const fetchAssets = async () => {
       setQuery(query);
-      setPage(page);
+      //       setPage(page);
       setStatus(Status.PENDING);
       try {
-        const { totalHits, hits } = await API.getGallery(_query, _page);
+        const { totalHits, hits } = await API.getGallery(_query, state.count);
         if (hits.length === 0) {
           return toast.error(
-            `Sorry, there are no images matching your search query for '${_query}'. Please try again.`
+            `Sorry, there are no images matching your search query for ${_query}. Please try again.`
           );
         }
-        setGallery([...hits]);
+        setGallery(prevState => [...prevState, ...hits]);
         setTotal(hits.length);
         setTotalHits(totalHits);
         setStatus(Status.RESOLVED);
@@ -105,7 +107,7 @@ export function ImageGalleryHub({ page, query, gallery, total, totalHits }) {
       }
     };
     fetchAssets();
-  }, [_page, _query, _totalHits, page, query]);
+  }, [_query, _totalHits, query, state.count]);
 
   if (status === Status.IDLE) {
     return <div>Please let us know your query item</div>;
@@ -120,9 +122,9 @@ export function ImageGalleryHub({ page, query, gallery, total, totalHits }) {
     return (
       <>
         <ImageGallery data={_gallery} />;
-        {/* {_total < _totalHits ? (
+        {_total < _totalHits ? (
           <Box display="flex" justifyContent="center">
-            <Button type="button" onClick={this.handleMoreImage}>
+            <Button type="button" onClick={handleMoreImage}>
               Load more
             </Button>
           </Box>
@@ -131,7 +133,7 @@ export function ImageGalleryHub({ page, query, gallery, total, totalHits }) {
           ? toast.warn(
               "We're sorry, but you've reached the end of search results."
             )
-          : null} */}
+          : null}
       </>
     );
   }
