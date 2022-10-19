@@ -44,7 +44,8 @@ const Status = {
 export function ImageGalleryHub({ page, query, gallery, total, totalHits }) {
   const step = 1;
   const initialValue = {
-    count: page,
+    //     count: page,
+    page,
     //     _page: page,
     //     _gallery: gallery,
     //     _query: query,
@@ -57,7 +58,7 @@ export function ImageGalleryHub({ page, query, gallery, total, totalHits }) {
   function setReducer(state, action) {
     switch (action.type) {
       case 'increment':
-        return { ...state, count: state.count + action.payload };
+        return { ...state, page: state.page + action.payload };
       default:
         throw new Error(`Unsupported action action type ${action.type}`);
     }
@@ -67,7 +68,7 @@ export function ImageGalleryHub({ page, query, gallery, total, totalHits }) {
 
   function handleMoreImage() {
     dispatch({ type: 'increment', payload: step });
-    console.log(state.count);
+    console.log(state.page);
     console.log('addMoreImage pressed', Date.now());
     //     setPage(prevState => prevState + step);
   }
@@ -89,7 +90,7 @@ export function ImageGalleryHub({ page, query, gallery, total, totalHits }) {
       //       setPage(page);
       setStatus(Status.PENDING);
       try {
-        const { totalHits, hits } = await API.getGallery(_query, state.count);
+        const { totalHits, hits } = await API.getGallery(_query, state.page);
         if (hits.length === 0) {
           return toast.error(
             `Sorry, there are no images matching your search query for ${_query}. Please try again.`
