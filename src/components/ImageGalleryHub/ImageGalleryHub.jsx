@@ -44,15 +44,13 @@ const Status = {
 export function ImageGalleryHub({ page, query, gallery, total, totalHits }) {
   const step = 1;
   const initialValue = {
-    //     count: page,
     page,
-    //     _page: page,
-    //     _gallery: gallery,
-    //     _query: query,
-    //     _total: total,
-    //     _totalHits: totalHits,
-    //     error: false,
-    //     status: Status.IDLE,
+    gallery,
+    query,
+    total,
+    totalHits,
+    error: false,
+    status: Status.IDLE,
   };
 
   function setReducer(state, action) {
@@ -68,12 +66,8 @@ export function ImageGalleryHub({ page, query, gallery, total, totalHits }) {
 
   function handleMoreImage() {
     dispatch({ type: 'increment', payload: step });
-    console.log(state.page);
-    console.log('addMoreImage pressed', Date.now());
-    //     setPage(prevState => prevState + step);
   }
 
-  //   const [_page, setPage] = useState(page);
   const [_gallery, setGallery] = useState(gallery);
   const [_query, setQuery] = useState(query);
   const [_total, setTotal] = useState(total);
@@ -87,7 +81,6 @@ export function ImageGalleryHub({ page, query, gallery, total, totalHits }) {
     }
     const fetchAssets = async () => {
       setQuery(query);
-      //       setPage(page);
       setStatus(Status.PENDING);
       try {
         const { totalHits, hits } = await API.getGallery(_query, state.page);
@@ -108,7 +101,9 @@ export function ImageGalleryHub({ page, query, gallery, total, totalHits }) {
       }
     };
     fetchAssets();
-  }, [_query, _totalHits, query, state.count]);
+  }, [_query, _totalHits, query, state.page]);
+
+  useEffect(() => {});
 
   if (status === Status.IDLE) {
     return <div>Please let us know your query item</div>;
